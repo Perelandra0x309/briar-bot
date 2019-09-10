@@ -5,24 +5,24 @@ Project status: Proof of concept
 
 Current development environment: Linux Mint 19.1, Eclipse IDE, Gradle
 
-##Using BriarBot
+## Using BriarBot
 First you need to have briar-headless running and add a contact to it from another device running Briar.  You can follow the instruction on the briar-headless Github page to get it running.  You can use the curl command to access the briar-headless API for adding a contact, or you can use some [php scripts](https://github.com/Perelandra0x309/briar-w3-css/tree/master/briar-php-api) I created to make using the API easier.  For example, to add a contact using my script:
 
-```
+```console
 export AUTH_TOKEN=`cat ~/.briar/auth_token`
 php briar-cli.php --action=add_contact --link=[briar link here] --alias=[device name]
 ```
 
 You can verify the contact was successfully added and send a test message with:
 
-```
+```console
 php briar-cli.php --action=list_all_contacts
 php briar-cli.php --action=write_message --contact_id=[id number] --text=[message]
 ```
 
 Once you have verified your device and the briar-headless are communicating you can start the BriarBot by cloning this Github to your PC and running this command from a shell in the cloned git repository path:
 
-```
+```console
 java -jar build/libs/briarbot-0.1.0.jar
 ```
 <blockquote>
@@ -34,14 +34,14 @@ private final int allowedContactId = 1;
 
 Then build the jar with gradle:
 
-```
+```console
 gradle build
 ```
 </blockquote>
 
 Once you run the briar-bot application you should see a successful connection status message:
 
-```
+```console
 briar-bot$ java -jar build/libs/briarbot-0.1.0.jar 
 Sep 09, 2019 8:12:45 PM com.briarbot.client.BriarBot onOpen
 INFO: Connected ... 414fdb51-b517-4609-8967-67a7d65a6c48
@@ -49,7 +49,7 @@ INFO: Connected ... 414fdb51-b517-4609-8967-67a7d65a6c48
 
 From your other connected device you can now send a message like this:
 
-```
+```console
 bb [command] [options or other text]
 ```
 
