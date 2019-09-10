@@ -1,0 +1,60 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+mainClassName = 'com.briarbot.client.BriarBot'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+sourceSets {
+   main {
+      java {
+         srcDir 'src'
+      }
+   }
+}
+repositories {
+   mavenCentral()
+}
+configurations {
+    // configuration that holds jars to include in the jar
+    extraLibs
+}
+dependencies {
+	// https://mvnrepository.com/artifact/org.glassfish.tyrus.bundles/tyrus-standalone-client
+	extraLibs group: 'org.glassfish.tyrus.bundles', name: 'tyrus-standalone-client', version: '1.15'
+
+	// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+	extraLibs group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+
+	// https://mvnrepository.com/artifact/org.apache.commons/commons-text
+	extraLibs group: 'org.apache.commons', name: 'commons-text', version: '1.8'
+
+	// https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api
+	extraLibs group: 'javax.websocket', name: 'javax.websocket-api', version: '1.1'
+
+	// https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
+	extraLibs group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+
+    testCompile "junit:junit:4.12"
+
+	configurations.compile.extendsFrom(configurations.extraLibs)
+}
+allprojects {
+    tasks.withType(Jar) { // includes War and Ear
+    	baseName = 'briarbot'
+    	version =  '0.1.0'
+        manifest {
+            attributes(
+            	'Class-Path': configurations.runtimeClasspath.files.collect { it.getName() }.join(' '),
+                'Main-Class': 'com.briarbot.client.BriarBot'
+        	)
+        }
+    }
+}
+jar {
+    from {
+            configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
+        }
+}
