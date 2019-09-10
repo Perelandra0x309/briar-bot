@@ -34,7 +34,6 @@ public class BriarBot {
     private static CountDownLatch latch;
     private Logger logger = Logger.getLogger(this.getClass().getName());
     private String bearerToken;
-    private BufferedReader br;
     private final int allowedContactId = 1;
     private final String botKeyword = "bb";
 
@@ -44,8 +43,9 @@ public class BriarBot {
         try {
         	String tokenFilePath = System.getProperty("user.home") + "/.briar/auth_token";
         	File file = new File(tokenFilePath); 
-        	br = new BufferedReader(new FileReader(file));
+        	BufferedReader br = new BufferedReader(new FileReader(file));
         	String authToken = br.readLine();
+        	br.close();
         	if (authToken == null || authToken.equals("")) {
         		logger.warning("Briar authentication token missing.  You should have a file " + tokenFilePath + " containing your Briar authentication token.");
         		latch.countDown();
@@ -56,8 +56,6 @@ public class BriarBot {
         } catch (IOException e) {
         	logger.warning(e.toString());
             throw new RuntimeException(e);
-        } finally {
-        	br.close();
         }
     }
 
@@ -86,7 +84,7 @@ public class BriarBot {
             
             String replyText = "";
             if(splitMessage.length == 1 || splitMessage[1].equals("")) {
-            	replyText = "I'm here.  If you need help type 'bot help'.";
+            	replyText = "I'm here.  If you need help type '" + botKeyword + " help'.";
             }
             else {
             	String messageRemainder = "";
@@ -151,6 +149,7 @@ public class BriarBot {
     		while ((output = br.readLine()) != null) {
     			logger.info(output);
     		}
+    		br.close();
 
     		conn.disconnect();
 
